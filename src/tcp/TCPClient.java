@@ -15,7 +15,7 @@ public class TCPClient {
 
     public static void main(String[] args) throws IOException {
         Socket socket = null;
-        Scanner sc = null;
+        Scanner scanner = null;
 
         try {
             socket = new Socket(Util.SERVER_IP, Util.SERVER_PORT); // Connect to server
@@ -24,35 +24,34 @@ public class TCPClient {
             DataInputStream din = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
             DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 
-            sc = new Scanner(System.in);
+            scanner = new Scanner(System.in);
 
             while (true) {
                 ParsedCommand parsedCommand;
                 try {
-                    parsedCommand = Util.parseCommand(sc.nextLine());
+                    parsedCommand = Util.parseCommand(scanner.nextLine());
                 } catch (Exception ex) {
                     System.err.println(ex.getMessage());
                     continue;
                 }
 
-                String input = parsedCommand.toString();
-                System.out.println("input = " + input);
+                String command = parsedCommand.toString();
 
-                dos.writeUTF(input);
+                dos.writeUTF(command);
                 dos.flush();
 
                 if (parsedCommand.getCommandEnum() == CommandEnum.EXIT) {
                     break;
                 } else {
                     String output = din.readUTF();
-                    System.out.println("output = " + output);
+                    System.out.println(output);
                 }
             }
         } catch (IOException ex) {
             System.err.println("Can't connect to server");
         } finally {
-            if (sc != null) {
-                sc.close();
+            if (scanner != null) {
+                scanner.close();
             }
             if (socket != null) {
                 socket.close();

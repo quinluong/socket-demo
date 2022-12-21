@@ -12,26 +12,24 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class TCPServerSingleThread {
+public class TCPServerMultiThread {
 
-    public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = null;
+    private static class Worker implements Runnable {
 
-        try {
-            System.out.println("Binding to port " + Util.SERVER_PORT + ", please wait ...");
+        private final Socket socket;
+        private final CacheInterface cache;
 
-            serverSocket = new ServerSocket(Util.SERVER_PORT);
+        public Worker(Socket socket, CacheInterface cache) {
+            this.socket = socket;
+            this.cache = cache;
+        }
 
-            System.out.println("Server started: " + serverSocket);
-            System.out.println("Waiting for a client ...");
-
-            CacheInterface cache = new CacheMap();
-
-            while (true) {
-                Socket socket = serverSocket.accept();
-                System.out.println("Client accepted: " + socket);
-
+        @Override
+        public void run() {
+            try {
                 try {
                     DataInputStream din = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
                     DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
@@ -81,6 +79,32 @@ public class TCPServerSingleThread {
 
                 socket.close();
                 System.out.println("Client closed, " + socket);
+            } catch (IOException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        ServerSocket serverSocket = null;
+
+        try {
+            System.out.println("Binding to port " + Util.SERVER_PORT + ", please wait ...");
+
+            serverSocket = new ServerSocket(Util.SERVER_PORT);
+
+            System.out.println("Server started: " + serverSocket);
+            System.out.println("Waiting for a client ...");
+
+            CacheInterface cache = new CacheMap();
+            ExecutorService executor = Executors.newFixedThreadPool(Util.NUMBER_OF_THREADS);
+
+            while (true) {
+                Socket socket = serverSocket.accept();
+                System.out.println("Client accepted: " + socket);
+
+                Worker worker = new Worker(socket, cache);
+                executor.execute(worker);
             }
         } catch (IOException ex) {
             System.err.println("Can't start server");

@@ -1,7 +1,7 @@
 package cache;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -12,7 +12,7 @@ public class CacheMap implements CacheInterface {
     private final Map<String, String> map;
 
     public CacheMap() {
-        map = new HashMap();
+        map = new ConcurrentHashMap();
     }
 
     @Override

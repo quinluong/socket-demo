@@ -4,6 +4,7 @@ public class Util {
 
     public final static String SERVER_IP = "127.0.0.1";
     public static final int SERVER_PORT = 4848;
+    public static final int NUMBER_OF_THREADS = 2;
 
     public static ParsedCommand parseCommand(String input) throws Exception {
         if (input == null) {
