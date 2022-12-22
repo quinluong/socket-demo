@@ -74,7 +74,7 @@ public class TCPServerMultiThread {
                         }
                     }
                 } catch (IOException ex) {
-                    System.err.println("Connection Error: " + ex);
+                    System.err.println("Connection error: " + ex);
                 }
 
                 socket.close();

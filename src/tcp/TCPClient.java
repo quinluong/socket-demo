@@ -18,7 +18,7 @@ public class TCPClient {
         Scanner scanner = null;
 
         try {
-            socket = new Socket(Util.SERVER_IP, Util.SERVER_PORT); // Connect to server
+            socket = new Socket(Util.SERVER_IP, Util.SERVER_PORT);
             System.out.println("Connected: " + socket);
 
             DataInputStream din = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
