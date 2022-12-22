@@ -21,7 +21,12 @@ public class UDPClient {
                 String output = (new BufferedReader(new InputStreamReader(System.in))).readLine();
 
                 byte[] inputBytes = output.getBytes();
-                DatagramPacket outputPacket = new DatagramPacket(inputBytes, inputBytes.length, InetAddress.getByName(Util.SERVER_IP), Util.SERVER_PORT);
+                DatagramPacket outputPacket = new DatagramPacket(
+                        inputBytes,
+                        inputBytes.length,
+                        InetAddress.getByName(Util.SERVER_IP),
+                        Util.SERVER_PORT
+                );
                 datagramSocket.send(outputPacket);
 
                 DatagramPacket inputPacket = new DatagramPacket(Util.UDP_BUFFER, Util.UDP_BUFFER.length);

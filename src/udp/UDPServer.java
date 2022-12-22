@@ -26,7 +26,12 @@ public class UDPServer {
                 System.out.println(String.format("Received message from client, client = %s, message = %s", inputPacket.getSocketAddress(), input));
 
                 byte[] outputBytes = "OK".getBytes();
-                DatagramPacket outputPacket = new DatagramPacket(outputBytes, outputBytes.length, inputPacket.getAddress(), inputPacket.getPort());
+                DatagramPacket outputPacket = new DatagramPacket(
+                        outputBytes,
+                        outputBytes.length,
+                        inputPacket.getAddress(),
+                        inputPacket.getPort()
+                );
                 datagramSocket.send(outputPacket);
             }
         } catch (IOException ex) {
